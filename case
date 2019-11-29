@@ -1,0 +1,45 @@
+
+ create database casestudy;
+
+use casestudy;
+
+ create table users(id int primary key,name varchar(100),email varchar(100),phone varchar(100),passwd varchar(100),role varchar(100));
+
+ insert into users values(1,"akhl","akhldadhich91@gmail.com","1234567891","akhil91","user");
+
+=========================================================================================================
+create table books(id int primary key auto_increment,name varchar(100),author varchar(100),subject varchar(100),price int,isbn int );
+
+
+ insert into books values (10,"letus c","denis richy","c language",300,123);
+
+========================================================================================================
+ create table copies(id int primary key,bookid int,rack int,status varchar(100), foreign key (bookid)  references books (id) );
+
+ insert into copies values(1,10,1,"available");
+
+============================================================
+ create table payments(id int primary key,userid int,amount int,type varchar(100),transaction_time datetime,nextpayment_duedate datetime,foreign key(userid) references users(id));
+
+----+--------+--------+------+---------------------+---------------------+
+| id | userid | amount | type | transaction_time    | nextpayment_duedate |
++----+--------+--------+------+---------------------+---------------------+
+|  5 |      1 |    500 | fee  | 1995-05-15 00:00:00 | 1995-06-16 00:00:00 |
+|  6 |      1 |    500 | fee  | 1995-05-15 10:05:55 | 1995-06-16 11:20:55 |
++----+--------+--------+------+---------------------+---------------------+
+
+insert into payments values(6,1,500,"fee",'1995-05-15 10:05:55' ,'1995-06-16 11:20:55');
+Query OK, 1 row affected (0.20 sec)
+
+
+=====================================================================================================
+ create table issuerecord(id int primary key,copyid int,memberid int,issue_date datetime,return_duedate datetime,return_date datetime,fine_amount int,foreign key(copyid)references copies(id),foreign key (memberid)references users (id));
+
++----+--------+----------+---------------------+---------------------+---------------------+-------------+
+| id | copyid | memberid | issue_date          | return_duedate      | return_date         | fine_amount |
++----+--------+----------+---------------------+---------------------+---------------------+-------------+
+|  4 |      1 |        1 | 2019-05-13 02:19:13 | 2019-06-17 04:48:53 | 2019-09-26 00:00:00 |        1500 |
++----+--------+----------+---------------------+---------------------+---------------------+-------------+
+1 row in set (0.00 sec)
+insert into issuerecord values(4,1,1,'2019-05-13 02:19:13','2019-06-17 04:48:53','2019-09-26',1500);
+

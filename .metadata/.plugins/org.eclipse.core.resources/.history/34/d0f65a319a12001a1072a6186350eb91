@@ -1,0 +1,137 @@
+package com.sunbeam.library.dao;
+
+import java.io.Closeable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+import com.sunbeam.library.dbutil.Dbutils;
+import com.sunbeam.library.pojo.Pojo;
+import com.sunbeam.library.pojo.UserPojo;
+
+public class UserDao  implements Closeable
+{
+	 private Connection connection ;
+	 private PreparedStatement insertpstm  ;
+	 private PreparedStatement updateEmailPhonepstm  ;
+	 private PreparedStatement updatePasswordpstm  ;
+	 private PreparedStatement selectpstm  ;
+	 private PreparedStatement subjectWiseCopyReport;
+	 Scanner sc=new Scanner(System.in);
+	 
+	 
+	public UserDao() throws Exception {
+	
+		this.connection = Dbutils.getConnection();
+		this.insertpstm = connection.prepareStatement("INSERT INTO users VALUES(?,?,?,?,?,?)");
+		this.updateEmailPhonepstm = connection.prepareStatement("UPDATE users SET email=?,phone=? WHERE email=?");
+		this.updatePasswordpstm=connection.prepareStatement("UPDATE users ser passwd=? WHERE email=?");
+		this.selectpstm =  connection.prepareStatement("SELECT email,passwd FROM users");
+		this.subjectWiseCopyReport=connection.prepareStatement("SELECT subject,COUNT(*) FROM  books GROUP BY subject");
+	}
+
+	public boolean login(UserPojo user) throws Exception
+	{
+		selectpstm.setString(3, user.getEmail());
+	    selectpstm.setString(5, user.getPassword());
+	    selectpstm.executeQuery();
+	    try(ResultSet rs=selectpstm.getResultSet()) 
+	    {
+			if(rs!=null)
+			{
+				while(rs.next())
+				{
+					if(rs.getString(3)==user.getEmail() && rs.getString(5)==user.getPassword())
+					{
+						return true;
+					}
+				}
+			}
+			else
+			{
+				return false;
+			}
+		} catch (Exception e) 
+	    {
+		}
+	    
+	    return false;
+	}
+	public int insert(UserPojo user) throws Exception
+	{
+		insertpstm.setInt(1, user.getId());
+	    insertpstm.setString(2, user.getName());
+	    insertpstm.setString(3, user.getEmail());
+	    insertpstm.setString(4, user.getPhone());
+	    insertpstm.setString(5, user.getPassword());
+	    insertpstm.setString(6, user.getRole());
+		return insertpstm.executeUpdate() ;
+	}
+	public void updateMailPhone(UserPojo user) throws Exception
+	{
+		UserPojo u=new UserPojo();
+		System.out.println("Enter new Email");
+		u.setEmail(sc.next());
+		System.out.println("Enter new phone");
+		u.setPhone(sc.next());
+		updateEmailPhonepstm.setString(1, u.getEmail());
+		updateEmailPhonepstm.setString(2, u.getPhone());
+
+		updateEmailPhonepstm.setString(3, user.getEmail());
+		if(updateEmailPhonepstm.executeUpdate()>0)
+		{
+			System.out.println("Updated...");
+		}
+	}
+	public void changePassword(UserPojo user) throws Exception
+	{
+		System.out.println("Enter new password");
+		updatePasswordpstm.setString(1, sc.next());
+		updatePasswordpstm.setString(2, user.getEmail());
+		if(updatePasswordpstm.executeUpdate()>0)
+		{
+			System.out.println("Updated...");
+		}
+	}
+	
+	public void subjectWiseCopyReport() throws Exception
+	{
+		subjectWiseCopyReport.executeUpdate();
+		try(ResultSet rs=subjectWiseCopyReport.getResultSet()) 
+		{
+			if(rs!=null)
+			{
+				while(rs.next()) 
+				{
+					System.out.println(rs.getString(1)+ "  "+rs.getstri);
+				}
+			}
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public  void  close() 
+	{   
+		try {
+		insertpstm.close();
+		updateEmailPhonepstm.close();
+		updatePasswordpstm.close();
+		connection.close();
+		selectpstm.close();
+		}
+		catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+	}
+	 
+
+}

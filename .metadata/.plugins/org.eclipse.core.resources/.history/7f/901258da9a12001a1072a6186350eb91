@@ -1,0 +1,81 @@
+package com.sunbeam.library.main;
+
+import java.awt.Choice;
+import java.util.Scanner;
+
+import com.sunbeam.library.dao.UserDao;
+import com.sunbeam.library.pojo.UserPojo;
+
+public class Program
+{
+	static Scanner sc = new Scanner(System.in);
+	public static void main(String[] args) 
+	{
+		int a,choice;
+		
+		try(UserDao userDao=new UserDao();) 
+		{
+			while ((a=loginchoice())!=0) 
+			{
+				switch (a) 
+				{
+				case 1:
+					if(userDao.login(loginData())==true)
+					{
+						
+					}
+					break;
+				case 2:
+					
+					break;
+				}
+			}
+	
+		
+	}
+		private static afterLogin()
+		{
+			while ((choice=whoAreYou())!=0) 
+			{
+				switch (choice) 
+				{
+				case 1:
+					break;
+				case 2:
+					break;
+				case 3:
+
+					break;
+				}
+			}
+		} catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		}
+	private static UserPojo loginData() 
+	{
+		UserPojo user=new UserPojo();
+		System.out.println("Email: ");
+		user.setEmail(sc.next());
+		System.out.println("Password: ");
+		user.setPassword(sc.next());
+		return user;
+	}
+	private static int loginchoice() 
+	{
+		System.out.println("1.Exit");
+		System.out.println("2.SignIn");
+		System.out.println("3.SignUp");
+		return sc.nextInt();
+	}
+	private static int whoAreYou() 
+	{
+		System.out.println("1.Owner");
+		System.out.println("2.Librarian");
+		System.out.println("3.User");
+		System.out.println("Enter your choice: ");
+		return sc.nextInt();
+	}
+
+}

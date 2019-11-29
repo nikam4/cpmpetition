@@ -6,11 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
 import com.sunbeam.library.dbutil.Dbutils;
-import com.sunbeam.library.pojo.Pojo;
 import com.sunbeam.library.pojo.UserPojo;
 
 public class UserDao  implements Closeable
@@ -20,7 +20,7 @@ public class UserDao  implements Closeable
 	 private PreparedStatement updateEmailPhonepstm  ;
 	 private PreparedStatement updatePasswordpstm  ;
 	 private PreparedStatement selectpstm  ;
-	 private PreparedStatement subjectWiseCopyReport;
+//	 private PreparedStatement subjectWiseCopyReport;
 	 Scanner sc=new Scanner(System.in);
 	 
 	 
@@ -31,9 +31,44 @@ public class UserDao  implements Closeable
 		this.updateEmailPhonepstm = connection.prepareStatement("UPDATE users SET email=?,phone=? WHERE email=?");
 		this.updatePasswordpstm=connection.prepareStatement("UPDATE users ser passwd=? WHERE email=?");
 		this.selectpstm =  connection.prepareStatement("SELECT email,passwd FROM users");
-		this.subjectWiseCopyReport=connection.prepareStatement("SELECT subject,COUNT(*) FROM  books GROUP BY subject");
+//		this.subjectWiseCopyReport=connection.prepareStatement("SELECT subject,COUNT(*) FROM  books GROUP BY subject");
 	}
 
+	public int login(UserPojo user) throws Exception
+	{
+	    selectpstm.executeQuery();
+	    try(ResultSet rs=selectpstm.getResultSet()) 
+	    {
+			if(rs!=null)
+			{
+				while(rs.next())
+				{
+					String email= (String)rs.getString("email");
+					
+					if(user.getEmail().equals(email));
+					{
+						return 1;
+					}
+				}
+			}
+		} catch (Exception e) 
+	    {
+		}
+	    
+	    return 2;
+	}
+
+	public int signUp(UserPojo u) throws Exception 
+	{
+		insertpstm.setInt(1, u.getId());
+		insertpstm.setString(2, u.getName());
+		insertpstm.setString(3, u.getEmail());
+		insertpstm.setString(4, u.getPhone());
+		insertpstm.setString(5, u.getPassword());
+		insertpstm.setString(6, u.getRole());
+		return insertpstm.executeUpdate();
+	}
+	
 	public int insert(UserPojo user) throws Exception
 	{
 		insertpstm.setInt(1, user.getId());
@@ -71,10 +106,24 @@ public class UserDao  implements Closeable
 		}
 	}
 	
-	public void subjectWiseCopyReport()
-	{
-		
-	}
+//	public void subjectWiseCopyReport() throws Exception
+//	{
+//		subjectWiseCopyReport.executeUpdate();
+//		try(ResultSet rs=subjectWiseCopyReport.getResultSet()) 
+//		{
+//			if(rs!=null)
+//			{
+//				while(rs.next()) 
+//				{
+//					System.out.println(rs.getString(1)+ "  "+rs.getstri);
+//				}
+//			}
+//		}
+//		catch (Exception e) 
+//		{
+//			e.printStackTrace();
+//		}
+//	}
 	
 	
 	public  void  close() 
@@ -91,6 +140,8 @@ public class UserDao  implements Closeable
 			e.printStackTrace();
 		}
 	}
+
+	
 	 
 
 }

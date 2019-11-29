@@ -1,0 +1,14 @@
+package sunbeam;
+
+import java.util.Comparator;
+
+import pojo.emppojo;
+
+public class SortByName implements Comparator<emppojo> 
+{
+	@Override
+	public int compare(emppojo o1, emppojo o2) 
+	{
+		return o1.getName().compareTo(o2.getName());
+	}
+}

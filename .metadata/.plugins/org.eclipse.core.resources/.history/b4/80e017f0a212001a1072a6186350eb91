@@ -1,0 +1,15 @@
+package com.sunbeam.library.dao;
+
+import java.util.Comparator;
+
+import com.sunbeam.library.pojo.UserPojo;
+
+
+public class Login implements Comparator<UserPojo> 
+{
+	@Override
+	public int compare( o1, emppojo o2) 
+	{
+		return o1.getName().compareTo(o2.getName());
+	}
+}

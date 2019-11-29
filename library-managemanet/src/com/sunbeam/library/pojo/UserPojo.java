@@ -1,6 +1,6 @@
 package com.sunbeam.library.pojo;
 
-public class UserPojo
+public class UserPojo implements Comparable<UserPojo>
 {
 	private  int id ;
 	private String name ;
@@ -143,6 +143,12 @@ public class UserPojo
 		} else if (!role.equals(other.role))
 			return false;
 		return true;
+	}
+
+	@Override
+	public int compareTo(UserPojo o) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 
