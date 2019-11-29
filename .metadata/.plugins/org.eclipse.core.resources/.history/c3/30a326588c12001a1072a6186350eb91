@@ -1,0 +1,126 @@
+package com.sunbeam.library.dao;
+
+import java.io.Closeable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.sunbeam.library.dbutil.Dbutils;
+import com.sunbeam.library.pojo.Pojo;
+
+public class DAO  implements Closeable{
+	
+	
+	
+	
+	private Connection conn ;
+	 private PreparedStatement insertpstm  ;
+	 private PreparedStatement updatepstm  ;
+	 private PreparedStatement   deletepstm  ;
+	 private PreparedStatement selectpstm  ;
+	 private PreparedStatement  searchpstm ;
+	 
+	 
+	public DAO() throws Exception {
+	
+		this.conn = Dbutils.getConnection();
+		this.insertpstm = conn.prepareStatement("INSERT INTO singer VALUES(?,?,?,?,?,?)");
+		this.updatepstm = conn.prepareStatement("UPDATE singer SET rating=? WHERE name=?");
+		this.deletepstm = conn.prepareStatement("DELETE FROM singer WHERE name=?");
+		this.selectpstm =  conn.prepareStatement("SELECT * FROM singer");
+		this.searchpstm = conn.prepareStatement("SELECT * FROM singer WHERE name=?");
+	}
+	
+	
+	
+	
+	
+	public int insert(Pojo dto) throws Exception
+	{
+		insertpstm.setString(1, dto.getName());
+	    insertpstm.setString(2, dto.getGender());
+	    insertpstm.setInt(3, dto.getAge());
+	    insertpstm.setString(4, dto.getEmailId());
+	    insertpstm.setString(5, dto.getContact());
+	    insertpstm.setInt(6, dto.getRating());
+	    
+		return insertpstm.executeUpdate() ;
+	}
+	
+	
+	public void update ( int rating ,String name) throws Exception
+	{
+		updatepstm.setInt(1, rating);
+		updatepstm.setString(2, name);
+		if(updatepstm.executeUpdate()>0)
+			System.out.println("Updated");
+		else
+			System.out.println("Not updated");
+	}
+	
+	public int delete ( String name ) throws Exception
+	{
+		this.deletepstm.setString(1, name);
+		
+		return deletepstm.executeUpdate() ;
+	}
+	
+	public Pojo search(String name) throws Exception 
+	{
+		searchpstm.setString(1, name);
+		searchpstm.executeQuery();
+		try(ResultSet rSet=searchpstm.getResultSet())
+		{
+			while (rSet.next()) 
+			{
+				System.out.println(rSet.getString(1)+" | "+rSet.getString(2)+" | "+rSet.getInt(3)+" | "+rSet.getString(4)+" | "+rSet.getInt(5)+" | "+rSet.getInt(6));
+			}
+			
+		}
+		return null;
+	}
+	public List<Pojo> getSinger() throws Exception
+	{
+		List<Pojo>list  = new ArrayList<Pojo>();
+		
+		selectpstm.executeQuery();
+		 
+		try (ResultSet  rs = selectpstm.getResultSet();)
+		{
+		 
+			while (rs.next()) 
+			{
+				
+			   Pojo dto = new Pojo();
+			   dto.setName(rs.getString(1));
+			   dto.setGender(rs.getString(2));
+			   dto.setAge(rs.getInt(3));
+			   dto.setEmailId(rs.getString(4));
+			   dto.setContact(rs.getString(5));
+			   dto.setRating(rs.getInt(6));
+			   
+			   list.add(dto);			   
+			}
+		}
+		return list ;
+	}
+	
+	
+	public  void  close() 
+	{   
+		try {
+		insertpstm.close();
+		updatepstm.close();
+		deletepstm.close();
+		selectpstm.close();
+		}
+		catch (Exception e) {
+			
+			e.printStackTrace();// TODO: handle exception
+		}
+	}
+	 
+
+}

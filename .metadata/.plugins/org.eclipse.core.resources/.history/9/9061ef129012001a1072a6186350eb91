@@ -1,0 +1,76 @@
+package com.sunbeam.library.dao;
+
+import java.io.Closeable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+import com.sunbeam.library.dbutil.Dbutils;
+import com.sunbeam.library.pojo.Pojo;
+
+public class DAO  implements Closeable
+{
+	 private Connection connection ;
+	 private PreparedStatement insertpstm  ;
+	 private PreparedStatement updatepstm  ;
+	 private PreparedStatement selectpstm  ;
+	 Scanner sc=new Scanner(System.in);
+	 
+	 
+	public DAO() throws Exception {
+	
+		this.connection = Dbutils.getConnection();
+		this.insertpstm = connection.prepareStatement("INSERT INTO users VALUES(?,?,?,?,?,?)");
+		this.updatepstm = connection.prepareStatement("UPDATE users SET email=?,phone=? WHERE id=?");
+		this.selectpstm =  connection.prepareStatement("SELECT email,passwd FROM users");
+	}
+
+	public int insert(UserPojo user) throws Exception
+	{
+		insertpstm.setInt(1, user.getid());
+	    insertpstm.setString(2, user.getname());
+	    insertpstm.setString(3, user.getemail());
+	    insertpstm.setString(4, user.getphone());
+	    insertpstm.setString(5, user.getpasswd());
+	    insertpstm.setString(6, user.getrole());
+		return insertpstm.executeUpdate() ;
+	}
+	public int updateMailPhone(UserPojo user) throws Exception
+	{
+		UserPojo u=new UserPojo();
+		System.out.println("Enter new Email");
+		u.setemail(sc.next());
+		System.out.println("Enter new phone");
+		u.setphone(sc.next());
+		insertpstm.setString(1, u.getemail());
+	    insertpstm.setString(2, u.getphone());
+
+	    insertpstm.setString(3, user.getemail());
+		return insertpstm.executeUpdate() ;
+	}
+	public void changePassword(userPojo user)
+	{
+		insertpstm.setString(1, u.getemail());
+	    
+	}
+	
+	
+	public  void  close() 
+	{   
+		try {
+		insertpstm.close();
+		updatepstm.close();
+		deletepstm.close();
+		selectpstm.close();
+		}
+		catch (Exception e) {
+			
+			e.printStackTrace();// TODO: handle exception
+		}
+	}
+	 
+
+}

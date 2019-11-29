@@ -1,0 +1,120 @@
+package com.sunbeam.library.main;
+
+import java.util.List;
+import java.util.Scanner;
+
+import com.sunbeam.library.dao.DAO;
+import com.sunbeam.library.pojo.Pojo;
+
+public class Program {
+
+	static Scanner sc = new Scanner(System.in);
+
+	public static void acceptRecoard(Pojo dto) {
+
+		System.out.println("enter name ");
+		dto.setName(sc.next());
+		System.out.println("enter gender ");
+		dto.setGender(sc.next());
+		System.out.println("enter age ");
+		dto.setAge(sc.nextInt());
+		System.out.println("enter email id ");
+		dto.setEmailId(sc.next());
+		System.out.println("enter contact");
+		dto.setContact(sc.next());
+		System.out.println("enter  rating  ");
+		dto.setRating(sc.nextInt());
+
+	}
+
+	public static void printRecoard(List<Pojo> list) {
+
+		if (list != null) {
+
+			for (Pojo dto : list) {
+				System.out.println(dto.toString());
+			}
+		}
+
+	}
+
+	
+	private static int AcceptRating() 
+	{
+		System.out.println("Enter rating: ");
+		return sc.nextInt();
+	}
+
+	private static String acceptName() 
+	{
+		System.out.println("Enter name: ");
+		return sc.next();
+	}
+	public static int menuList() {
+		System.out.println("0.Exit");
+		System.out.println("1.Insert singer ");
+		System.out.println("2.Update singer");
+		System.out.println("3.Delete singer");
+		System.out.println("4.Display All singer");
+		System.out.println("5.Search singer by name");
+		System.out.print("Enter choice	:	");
+		return sc.nextInt();
+	}
+
+	public static void main(String[] args) throws Exception
+
+	{
+		try (DAO dao = new DAO();) {
+			int choice;
+			String name;
+			int rating;
+
+			while ((choice = Program.menuList()) != 0) {
+				switch (choice) {
+				case 1:
+                        Pojo dto = new Pojo();
+                        Program.acceptRecoard(dto);
+                        dao.insert(dto);
+					
+					break;
+
+				case 2:
+					System.out.println("enter name ");
+					name =sc.next();
+					System.out.println("enter  rating  ");
+					rating =sc.nextInt();
+					 dao.update( rating ,name);
+					    
+					break;
+
+				case 3:
+                         
+					System.out.println("enter name ");
+					name =sc.next();
+					dao.delete(name);
+					
+					break;
+
+				case 4:
+					 List<Pojo> list = dao.getSinger();
+					 Program.printRecoard(list); 
+					 
+					   
+
+					break;
+
+				case 5:
+                     
+					dao.search(acceptName());
+					break;
+
+				
+				}
+
+			}
+
+		}
+
+	}
+
+}

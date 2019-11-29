@@ -1,0 +1,75 @@
+package com.sunbeam.library.pojo;
+
+public class Pojo {
+	
+	private String name ;
+	private String gender ;
+	private int age ;
+	private String emailId ;
+	private String contact ;
+	private int rating ;
+	
+	
+	
+	public Pojo(String name, String gender, int age, String emailId, String contact, int rating) {
+		super();
+		this.name = name;
+		this.gender = gender;
+		this.age = age;
+		this.emailId = emailId;
+		this.contact = contact;
+		this.rating = rating;
+	}
+	
+	public Pojo() {
+		// TODO Auto-generated constructor stub
+	}
+
+	
+
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	public String getEmailId() {
+		return emailId;
+	}
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
+	public String getContact() {
+		return contact;
+	}
+	public void setContact(String contact) {
+		this.contact = contact;
+	}
+	public int getRating() {
+		return rating;
+	}
+	public void setRating(int rating) {
+		this.rating = rating;
+	}
+
+	@Override
+	public String toString() {
+		return "DTO [name=" + name + ", gender=" + gender + ", age=" + age + ", emailId=" + emailId + ", contact="
+				+ contact + ", rating=" + rating + "]";
+	}
+
+
+	
+}

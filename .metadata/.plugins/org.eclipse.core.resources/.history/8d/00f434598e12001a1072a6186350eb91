@@ -1,0 +1,60 @@
+package com.sunbeam.library.dao;
+
+import java.io.Closeable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.sunbeam.library.dbutil.Dbutils;
+import com.sunbeam.library.pojo.Pojo;
+
+public class DAO  implements Closeable
+{
+	 private Connection connection ;
+	 private PreparedStatement insertpstm  ;
+	 private PreparedStatement updatepstm  ;
+	 private PreparedStatement selectpstm  ;
+	 
+	 
+	public DAO() throws Exception {
+	
+		this.connection = Dbutils.getConnection();
+		this.insertpstm = connection.prepareStatement("INSERT INTO users VALUES(?,?,?,?,?,?)");
+		this.updatepstm = connection.prepareStatement("UPDATE users SET email=?,phone=? WHERE id=?");
+		this.selectpstm =  connection.prepareStatement("SELECT email,passwd FROM users");
+	}
+
+	public int insert() throws Exception
+	{
+		insertpstm.setString(1, dto.getName());
+	    insertpstm.setString(2, dto.getGender());
+	    insertpstm.setInt(3, dto.getAge());
+	    insertpstm.setString(4, dto.getEmailId());
+	    insertpstm.setString(5, dto.getContact());
+	    insertpstm.setInt(6, dto.getRating());
+	    
+		return insertpstm.executeUpdate() ;
+	}
+	
+	
+	
+	
+	
+	public  void  close() 
+	{   
+		try {
+		insertpstm.close();
+		updatepstm.close();
+		deletepstm.close();
+		selectpstm.close();
+		}
+		catch (Exception e) {
+			
+			e.printStackTrace();// TODO: handle exception
+		}
+	}
+	 
+
+}
